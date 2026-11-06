@@ -120,6 +120,6 @@ To demonstrate failed tests without keeping broken assertions in the repository:
    marked red, while the real unit and integration jobs remain passed.
 
 The failure demonstrations modify assertions only in the temporary GitHub-hosted runner.
-Their steps use `continue-on-error`, so the expected demonstrations do not make the genuine
-CI result fail. Pull requests skip both demonstrations; push runs show one, and manual runs
-can show either one or two.
+They intentionally make the demonstration job and overall workflow red; this does not mean
+the genuine test suite is broken. Pull requests skip both demonstrations, push runs show one,
+and manual runs can show either one or two.

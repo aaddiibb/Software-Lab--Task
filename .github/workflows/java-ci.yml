@@ -104,7 +104,6 @@ jobs:
 
       - name: Run the intentionally failing test
         id: failure_demo
-        continue-on-error: true
         run: >-
           mvn --batch-mode --no-transfer-progress
           -Dtest=AccountServiceTest#newAccountEncodesPasswordAndAssignsRole test
@@ -142,7 +141,6 @@ jobs:
 
       - name: Run the intentionally failing test
         id: failure_demo
-        continue-on-error: true
         run: >-
           mvn --batch-mode --no-transfer-progress
           -Dtest=AccountServiceTest#newAccountRejectsBlankPassword test
