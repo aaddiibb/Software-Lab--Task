@@ -1,0 +1,32 @@
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: university
+      POSTGRES_USER: university
+      POSTGRES_PASSWORD: university
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U university -d university"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  app:
+    build: .
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/university
+      SPRING_DATASOURCE_USERNAME: university
+      SPRING_DATASOURCE_PASSWORD: university
+      ADMIN_USERNAME: admin
+      ADMIN_PASSWORD: admin123
+      SEED_DEMO_DATA: "true"
+    depends_on:
+      db:
+        condition: service_healthy
+
+volumes:
+  db-data:

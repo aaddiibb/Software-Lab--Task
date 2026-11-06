@@ -1,0 +1,571 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1" name="viewport"/>
+  <title>
+    University Management System
+  </title>
+  <style>
+
+    :root {
+      --navy:#10233f;
+      --blue:#2563eb;
+      --ink:#17233b;
+      --muted:#64748b;
+      --line:#e2e8f0;
+      --bg:#f5f8fc;
+      --danger:#dc3545
+    }
+    * {
+      box-sizing:border-box
+    }
+    body {
+      margin:0;
+      background:var(--bg);
+      color:var(--ink);
+      font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif
+    }
+    button,input,select {
+      font:inherit
+    }
+    button {
+      cursor:pointer
+    }
+    .hidden {
+      display:none!important
+    }
+    .login {
+      min-height:100vh;
+      display:grid;
+      place-items:center;
+      padding:24px;
+      background:radial-gradient(circle at 10% 0,#dbeafe,transparent 32rem),linear-gradient(135deg,#f8fbff,#eaf8f5)
+    }
+    .login-card {
+      width:min(450px,100%);
+      padding:36px;
+      border:1px solid #fff;
+      border-radius:24px;
+      background:#ffffffe8;
+      box-shadow:0 24px 60px #1e3a5f1c
+    }
+    .mark {
+      width:48px;
+      height:48px;
+      display:grid;
+      place-items:center;
+      border-radius:15px;
+      color:#fff;
+      background:linear-gradient(135deg,#2563eb,#10b981);
+      font-weight:900;
+      font-size:22px
+    }
+    .login h1 {
+      margin:22px 0 8px;
+      font-size:30px;
+      letter-spacing:-.04em
+    }
+    .sub {
+      margin:0 0 26px;
+      color:var(--muted);
+      line-height:1.6;
+      font-size:14px
+    }
+    label {
+      display:block;
+      margin:15px 0 7px;
+      font-size:13px;
+      font-weight:750
+    }
+    input,select {
+      width:100%;
+      padding:11px 12px;
+      border:1px solid var(--line);
+      border-radius:9px;
+      background:#fff;
+      color:var(--ink);
+      outline:none
+    }
+    input:focus,select:focus {
+      border-color:var(--blue);
+      box-shadow:0 0 0 3px #2563eb1a
+    }
+    .btn {
+      padding:10px 14px;
+      border:0;
+      border-radius:9px;
+      background:var(--blue);
+      color:#fff;
+      font-weight:750
+    }
+    .btn:hover {
+      filter:brightness(.94)
+    }
+    .btn.secondary {
+      color:var(--ink);
+      background:#e9eff8
+    }
+    .btn.danger {
+      background:var(--danger)
+    }
+    .error {
+      margin-top:13px;
+      padding:11px;
+      border-radius:9px;
+      color:#a52734;
+      background:#fff0f1;
+      font-size:13px
+    }
+    .hint {
+      margin-top:14px;
+      color:var(--muted);
+      text-align:center;
+      font-size:12px
+    }
+    .app {
+      display:grid;
+      grid-template-columns:245px 1fr;
+      min-height:100vh
+    }
+    .side {
+      padding:25px 16px;
+      background:var(--navy);
+      color:#fff
+    }
+    .brand {
+      display:flex;
+      align-items:center;
+      gap:10px;
+      padding:0 10px 30px;
+      font-weight:800
+    }
+    .brand .mark {
+      width:36px;
+      height:36px;
+      border-radius:11px;
+      font-size:16px
+    }
+    .role {
+      margin:0 10px 20px;
+      padding:8px 10px;
+      border-radius:8px;
+      background:#ffffff12;
+      color:#bdd1ee;
+      text-transform:uppercase;
+      font-size:11px;
+      font-weight:800;
+      letter-spacing:.1em
+    }
+    .nav {
+      display:grid;
+      gap:5px
+    }
+    .nav button {
+      padding:11px 12px;
+      border:0;
+      border-radius:9px;
+      text-align:left;
+      color:#b9c8df;
+      background:transparent
+    }
+    .nav button:hover,.nav button.active {
+      color:#fff;
+      background:#ffffff16
+    }
+    .logout {
+      width:calc(100% - 20px);
+      margin:25px 10px 0;
+      border:1px solid #ffffff29;
+      background:transparent;
+      color:#c8d4e8
+    }
+    .main {
+      min-width:0
+    }
+    .top {
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      padding:25px 34px;
+      background:#fff;
+      border-bottom:1px solid var(--line)
+    }
+    .top h1 {
+      margin:0;
+      font-size:25px;
+      letter-spacing:-.035em
+    }
+    .who {
+      color:var(--muted);
+      font-size:13px
+    }
+    .content {
+      padding:30px 34px;
+      max-width:1400px
+    }
+    .notice {
+      margin-bottom:20px;
+      padding:12px 14px;
+      border-radius:10px;
+      background:#ecfdf5;
+      color:#08745d;
+      font-size:13px
+    }
+    .cards {
+      display:grid;
+      grid-template-columns:repeat(4,1fr);
+      gap:15px;
+      margin-bottom:25px
+    }
+    .stat {
+      padding:19px;
+      border:1px solid var(--line);
+      border-radius:14px;
+      background:#fff
+    }
+    .stat small {
+      color:var(--muted);
+      font-size:12px
+    }
+    .stat strong {
+      display:block;
+      margin-top:7px;
+      font-size:28px
+    }
+    .panel {
+      padding:22px;
+      border:1px solid var(--line);
+      border-radius:15px;
+      background:#fff;
+      box-shadow:0 5px 18px #10233f07
+    }
+    .panel-head {
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:14px;
+      margin-bottom:17px
+    }
+    .panel h2 {
+      margin:0;
+      font-size:18px
+    }
+    .table-wrap {
+      overflow:auto
+    }
+    .table {
+      width:100%;
+      border-collapse:collapse;
+      min-width:620px
+    }
+    .table th,.table td {
+      padding:12px 10px;
+      border-bottom:1px solid var(--line);
+      text-align:left;
+      vertical-align:top;
+      font-size:13px
+    }
+    .table th {
+      color:var(--muted);
+      font-size:11px;
+      text-transform:uppercase;
+      letter-spacing:.08em
+    }
+    .actions {
+      display:flex;
+      gap:7px
+    }
+    .actions .btn {
+      padding:7px 9px;
+      font-size:12px
+    }
+    .empty {
+      padding:30px;
+      text-align:center;
+      color:var(--muted);
+      font-size:14px
+    }
+    .form-grid {
+      display:grid;
+      grid-template-columns:repeat(2,1fr);
+      gap:0 14px
+    }
+    .form-grid .full {
+      grid-column:1/-1
+    }
+    .form-actions {
+      display:flex;
+      justify-content:flex-end;
+      gap:8px;
+      margin-top:20px
+    }
+    .modal {
+      position:fixed;
+      inset:0;
+      display:grid;
+      place-items:center;
+      padding:20px;
+      background:#10233f80;
+      z-index:5
+    }
+    .modal-card {
+      width:min(620px,100%);
+      max-height:90vh;
+      overflow:auto;
+      padding:25px;
+      border-radius:15px;
+      background:#fff
+    }
+    .modal-head {
+      display:flex;
+      justify-content:space-between;
+      align-items:center
+    }
+    .modal-head h2 {
+      margin:0;
+      font-size:20px
+    }
+    .close {
+      border:0;
+      background:transparent;
+      color:var(--muted);
+      font-size:24px
+    }
+    .pill {
+      display:inline-block;
+      padding:4px 8px;
+      border-radius:999px;
+      color:#1357bb;
+      background:#eaf2ff;
+      font-size:11px;
+      font-weight:750
+    }
+    @media(max-width:850px) {
+      .app {
+        grid-template-columns:1fr
+      }
+      .side {
+        padding:12px 15px
+      }
+      .brand {
+        display:inline-flex;
+        padding:0 0 12px
+      }
+      .role {
+        display:inline-block;
+        margin:0 0 0 10px
+      }
+      .nav {
+        display:flex;
+        overflow:auto
+      }
+      .nav button {
+        white-space:nowrap
+      }
+      .logout {
+        float:right;
+        width:auto;
+        margin:10px 0 0
+      }
+      .top {
+        padding:22px
+      }
+      .content {
+        padding:22px
+      }
+      .cards {
+        grid-template-columns:repeat(2,1fr)
+      }
+    }
+    @media(max-width:520px) {
+      .top {
+        display:block
+      }
+      .who {
+        margin-top:6px
+      }
+      .cards {
+        grid-template-columns:1fr
+      }
+      .form-grid {
+        grid-template-columns:1fr
+      }
+      .form-grid .full {
+        grid-column:auto
+      }
+      .login-card {
+        padding:26px
+      }
+    }
+
+  </style>
+</head>
+<body>
+<section class="login" id="login">
+  <form class="login-card" id="login-form">
+    <div class="mark">
+      U
+    </div>
+    <h1>
+      University Management
+    </h1>
+    <p class="sub">
+      Sign in to manage students, teachers, courses, and administrator accounts.
+    </p>
+    <label for="username">
+      Username
+    </label>
+    <input autocomplete="username" id="username" required=""/>
+    <label for="password">
+      Password
+    </label>
+    <input autocomplete="current-password" id="password" required="" type="password"/>
+    <button class="btn" id="login-btn" style="width:100%;margin-top:20px">
+      Sign in
+    </button>
+    <div class="error hidden" id="login-error">
+    </div>
+  </form>
+</section>
+<section class="app hidden" id="app">
+  <aside class="side">
+    <div class="brand">
+      <div class="mark">
+        U
+      </div>
+      <span>
+      University
+      <br/>
+      Management
+     </span>
+    </div>
+    <div class="role" id="role-label">
+    </div>
+    <nav class="nav" id="nav">
+    </nav>
+    <button class="btn logout" id="logout">
+      Sign out
+    </button>
+  </aside>
+  <main class="main">
+    <header class="top">
+      <h1 id="page-title">
+        Overview
+      </h1>
+      <div class="who" id="who">
+      </div>
+    </header>
+    <div class="content">
+      <div class="notice hidden" id="notice">
+      </div>
+      <div id="view">
+      </div>
+    </div>
+  </main>
+</section>
+<div class="modal hidden" id="modal">
+  <div class="modal-card">
+    <div class="modal-head">
+      <h2 id="modal-title">
+      </h2>
+      <button class="close" id="close-modal">
+        ×
+      </button>
+    </div>
+    <form id="entity-form">
+    </form>
+  </div>
+</div>
+<script>
+
+  const $ = s => document.querySelector(s);
+  let auth = null, current = 'overview', editing = null, formKind = null, profileMode = false;
+  const configs = { admins: { label: 'Administrators', path: '/api/admins', fields: [['username', 'Username', 'text'], ['password', 'Password', 'password']] }, students: { label: 'Students', path: '/api/students', fields: [['name', 'Name', 'text'], ['email', 'Email', 'email'], ['department', 'Department', 'text'], ['username', 'Username', 'text'], ['password', 'Password', 'password']] }, teachers: { label: 'Teachers', path: '/api/teachers', fields: [['name', 'Name', 'text'], ['email', 'Email', 'email'], ['department', 'Department', 'text'], ['designation', 'Designation', 'text'], ['username', 'Username', 'text'], ['password', 'Password', 'password']] }, courses: { label: 'Courses', path: '/api/courses', fields: [['code', 'Code', 'text'], ['title', 'Title', 'text'], ['credits', 'Credits', 'number'], ['teacherId', 'Teacher ID', 'number']] } };
+  async function api(path, opts = {}) { const r = await fetch(path, { ...opts, headers: { 'Content-Type': 'application/json', Authorization: 'Basic ' + auth.token, ...(opts.headers || {}) } }); if (!r.ok) {
+    let msg = 'Request failed (' + r.status + ')';
+    try {
+      const e = await r.json();
+      msg = e.error || msg;
+    }
+    catch { }
+    throw Error(msg);
+  } return r.status === 204 ? null : r.json(); }
+  function setNotice(msg, error = false) { const n = $('#notice'); n.textContent = msg; n.className = 'notice' + (error ? ' error' : ''); n.classList.remove('hidden'); setTimeout(() => n.classList.add('hidden'), 3500); }
+  $('#login-form').onsubmit = async (e) => { e.preventDefault(); const btn = $('#login-btn'), err = $('#login-error'); btn.disabled = true; err.classList.add('hidden'); const u = $('#username').value.trim(), p = $('#password').value; auth = { token: btoa(u + ':' + p) }; try {
+    const me = await api('/api/auth/me');
+    auth = { ...auth, ...me };
+    showApp();
+  }
+  catch (x) {
+    err.textContent = x.message === 'Request failed (401)' ? 'Invalid username or password.' : x.message;
+    err.classList.remove('hidden');
+    auth = null;
+  }
+  finally {
+    btn.disabled = false;
+  } };
+  $('#logout').onclick = () => { auth = null; $('#app').classList.add('hidden'); $('#login').classList.remove('hidden'); };
+  function showApp() { $('#login').classList.add('hidden'); $('#app').classList.remove('hidden'); $('#role-label').textContent = auth.role; $('#who').textContent = 'Signed in as ' + auth.username; buildNav(); go('overview'); }
+  function buildNav() { const items = [['overview', 'Overview'], ['profile', 'My profile']]; if (auth.role === 'ADMIN')
+    items.push(['admins', 'Admins'], ['students', 'Students'], ['teachers', 'Teachers'], ['courses', 'Courses']);
+  else if (auth.role === 'TEACHER')
+    items.push(['students', 'Students'], ['teachers', 'Teachers'], ['courses', 'Courses']);
+  else
+    items.push(['teachers', 'Teachers'], ['courses', 'Courses']); $('#nav').innerHTML = items.map(([id, l]) => `<button data-view="${id}">${l}</button>`).join(''); document.querySelectorAll('[data-view]').forEach(b => b.onclick = () => go(b.dataset.view)); }
+  async function go(view) { current = view; document.querySelectorAll('[data-view]').forEach(b => b.classList.toggle('active', b.dataset.view === view)); $('#page-title').textContent = view === 'overview' ? 'Overview' : (configs[view]?.label || view[0].toUpperCase() + view.slice(1)); $('#view').innerHTML = '<div class="panel"><div class="empty">Loading…</div></div>'; try {
+    if (view === 'overview')
+      await overview();
+    else if (view === 'profile')
+      await profile();
+    else
+      await resource(view);
+  }
+  catch (e) {
+    $('#view').innerHTML = `<div class="panel"><div class="error">${e.message}</div></div>`;
+  } }
+  async function overview() { const resources = auth.role === 'ADMIN' ? ['admins', 'students', 'teachers', 'courses'] : ['teachers', 'courses']; const data = await Promise.all(resources.map(x => api(configs[x].path))); $('#view').innerHTML = `<div class="cards">${resources.map((x, i) => `<div class="stat"><small>${configs[x].label}</small><strong>${data[i].length}</strong></div>`).join('')}</div><div class="panel"><h2>Welcome back, ${auth.username}</h2><p class="sub" style="margin:10px 0 0">Use the navigation to view records and perform the actions allowed for your ${auth.role.toLowerCase()} account.</p></div>`; }
+  function profileKind() { return auth.role === 'ADMIN' ? 'admins' : auth.role === 'TEACHER' ? 'teachers' : 'students'; }
+  async function profile() { const kind = profileKind(), p = await api(configs[kind].path + '/me'); auth.profile = p; const courses = 'courses' in p ? `<p class="sub" style="margin:10px 0 0">Courses: ${(p.courses || []).join(', ') || 'None yet'}</p>` : ''; $('#view').innerHTML = `<div class="panel"><div class="panel-head"><h2>My profile</h2><div class="actions"><span class="pill">${auth.role}</span><button class="btn" onclick="openProfileForm()">Edit profile</button></div></div><div class="form-grid">${Object.entries(p).filter(([k]) => k !== 'courses').map(([k, v]) => `<div><label>${k}</label><p style="margin:0 0 12px">${v ?? '—'}</p></div>`).join('')}</div>${courses}</div>`; }
+  function canManage(kind) { return (auth.role === 'ADMIN' && kind !== 'admins') || (auth.role === 'TEACHER' && kind === 'students') || (auth.role === 'STUDENT' && kind === 'courses'); }
+  async function resource(kind) { const c = configs[kind], rows = await api(c.path), manage = canManage(kind); const headers = c.fields.filter(f => f[0] !== 'password').map(f => f[1]); $('#view').innerHTML = `<div class="panel"><div class="panel-head"><h2>${c.label}</h2>${manage ? '<button class="btn" onclick="openForm(\'' + kind + '\')">+ Add ' + c.label.slice(0, -1) + '</button>' : ''}</div><div class="table-wrap"><table class="table"><thead><tr><th>ID</th>${headers.map(x => `<th>${x}</th>`).join('')}<th>Details</th>${manage ? '<th>Actions</th>' : ''}</tr></thead><tbody>${rows.length ? rows.map(r => row(kind, r, manage)).join('') : `<tr><td colspan="${headers.length + 3}" class="empty">No records found.</td></tr>`}</tbody></table></div></div>`; }
+  function row(kind, r, manage) { const c = configs[kind], vals = c.fields.filter(f => f[0] !== 'password').map(f => `<td>${r[f[0]] ?? '—'}</td>`).join(''), details = kind === 'courses' ? `<td>${r.teacherName || 'Unassigned'} · ${(r.students || []).length} students</td>` : kind === 'students' || kind === 'teachers' ? `<td>${(r.courses || []).join(', ') || '—'}</td>` : '<td>—</td>', actions = manage ? `<td class="actions"><button class="btn secondary" onclick="openForm('${kind}',${r.id})">Edit</button><button class="btn danger" onclick="removeRow('${kind}',${r.id})">Delete</button></td>` : ''; return `<tr><td>${r.id}</td>${vals}${details}${actions}</tr>`; }
+  function showForm(kind, record, title) { const c = configs[kind]; $('#modal-title').textContent = title; $('#entity-form').innerHTML = '<div class="form-grid">' + c.fields.map(([key, label, type]) => `<div class="${key === 'title' ? 'full' : ''}"><label for="f-${key}">${label}</label><input id="f-${key}" name="${key}" type="${type}" ${key === 'password' && !record ? 'required' : ''} value="${record && key !== 'password' ? (record[key] ?? '') : ''}" ${key === 'credits' ? 'min="0"' : ''}></div>`).join('') + '</div><div class="form-actions"><button type="button" class="btn secondary" onclick="closeModal()">Cancel</button><button class="btn">Save</button></div>'; $('#entity-form').onsubmit = saveForm; $('#modal').classList.remove('hidden'); }
+  window.openForm = async (kind, id = null) => { profileMode = false; formKind = kind; editing = id ? await api(configs[kind].path + '/' + id) : null; showForm(kind, editing, (id ? 'Edit ' : 'Add ') + configs[kind].label.slice(0, -1)); };
+  window.openProfileForm = async () => { const kind = profileKind(); profileMode = true; formKind = kind; editing = await api(configs[kind].path + '/me'); showForm(kind, editing, 'Edit my profile'); };
+  window.closeModal = () => { $('#modal').classList.add('hidden'); editing = null; formKind = null; profileMode = false; };
+  $('#close-modal').onclick = closeModal;
+  async function saveForm(e) { e.preventDefault(); const kind = formKind || current, c = configs[kind], body = {}, updating = profileMode || !!editing, wasProfile = profileMode; c.fields.forEach(([k, , type]) => { const v = $('#f-' + k).value; if (v !== '' || k !== 'password')
+    body[k] = type === 'number' ? (v === '' ? 0 : Number(v)) : v; }); try {
+    const path = wasProfile ? c.path + '/me' : c.path + (editing ? '/' + editing.id : '');
+    const saved = await api(path, { method: updating ? 'PUT' : 'POST', body: JSON.stringify(body) });
+    if (wasProfile) {
+      const credentials = atob(auth.token), oldPassword = credentials.slice(credentials.indexOf(':') + 1);
+      auth.username = saved.username;
+      auth.profile = saved;
+      auth.token = btoa(saved.username + ':' + (body.password || oldPassword));
+      $('#who').textContent = 'Signed in as ' + auth.username;
+    }
+    closeModal();
+    setNotice((updating ? 'Updated ' : 'Created ') + c.label.slice(0, -1));
+    go(wasProfile ? 'profile' : kind);
+  }
+  catch (x) {
+    setNotice(x.message, true);
+  } }
+  window.removeRow = async (kind, id) => { if (!confirm('Delete this record?'))
+    return; try {
+    await api(configs[kind].path + '/' + id, { method: 'DELETE' });
+    setNotice('Record deleted');
+    go(kind);
+  }
+  catch (x) {
+    setNotice(x.message, true);
+  } };
+
+
+</script>
+</body>
+</html>
+
