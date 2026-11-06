@@ -1,0 +1,157 @@
+name: Java CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      failure_demo:
+        description: Number of intentional AccountService test failures to display
+        required: true
+        default: none
+        type: choice
+        options:
+          - none
+          - one
+          - two
+
+permissions:
+  contents: read
+
+concurrency:
+  group: java-ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  unit-tests:
+    name: Unit tests - ${{ matrix.test-suite }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - test-suite: AccountService (4 passed)
+            test-class: AccountServiceTest
+          - test-suite: StudentService (4 passed)
+            test-class: StudentServiceTest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v6
+
+      - name: Set up Java 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+          cache: maven
+
+      - name: Run ${{ matrix.test-suite }} unit tests
+        run: mvn --batch-mode --no-transfer-progress -Dtest=${{ matrix.test-class }} test
+
+  database-integration-tests:
+    name: Database integration tests (3 passed)
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v6
+
+      - name: Set up Java 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+          cache: maven
+
+      - name: Run Spring Boot and H2 integration tests
+        run: mvn --batch-mode --no-transfer-progress -Dtest=DatabaseIntegrationTest test
+
+      - name: Upload integration-test reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: database-integration-test-reports
+          path: target/surefire-reports/
+          if-no-files-found: error
+
+  expected-failure-one:
+    name: Expected failure demo 1 of 2
+    if: >-
+      github.event_name == 'push' ||
+      (github.event_name == 'workflow_dispatch' &&
+      (inputs.failure_demo == 'one' || inputs.failure_demo == 'two'))
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v6
+
+      - name: Set up Java 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+          cache: maven
+
+      - name: Introduce a temporary wrong username expectation
+        run: >-
+          sed -i
+          's/assertEquals("alice", account.getUsername());/assertEquals("wrong-user", account.getUsername());/'
+          src/test/java/com/university/ums/service/AccountServiceTest.java
+
+      - name: Run the intentionally failing test
+        id: failure_demo
+        continue-on-error: true
+        run: >-
+          mvn --batch-mode --no-transfer-progress
+          -Dtest=AccountServiceTest#newAccountEncodesPasswordAndAssignsRole test
+
+      - name: Confirm failure was demonstrated
+        if: always()
+        env:
+          DEMO_OUTCOME: ${{ steps.failure_demo.outcome }}
+        run: |
+          test "$DEMO_OUTCOME" = "failure"
+          echo "### Expected failure 1 displayed successfully" >> "$GITHUB_STEP_SUMMARY"
+          echo 'The runner expected `wrong-user`, while the service correctly returned `alice`.' >> "$GITHUB_STEP_SUMMARY"
+
+  expected-failure-two:
+    name: Expected failure demo 2 of 2
+    if: github.event_name == 'workflow_dispatch' && inputs.failure_demo == 'two'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v6
+
+      - name: Set up Java 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+          cache: maven
+
+      - name: Introduce a temporary wrong validation message
+        run: >-
+          sed -i
+          's/assertEquals("password is required", exception.getMessage());/assertEquals("password is optional", exception.getMessage());/'
+          src/test/java/com/university/ums/service/AccountServiceTest.java
+
+      - name: Run the intentionally failing test
+        id: failure_demo
+        continue-on-error: true
+        run: >-
+          mvn --batch-mode --no-transfer-progress
+          -Dtest=AccountServiceTest#newAccountRejectsBlankPassword test
+
+      - name: Confirm failure was demonstrated
+        if: always()
+        env:
+          DEMO_OUTCOME: ${{ steps.failure_demo.outcome }}
+        run: |
+          test "$DEMO_OUTCOME" = "failure"
+          echo "### Expected failure 2 displayed successfully" >> "$GITHUB_STEP_SUMMARY"
+          echo 'The runner expected `password is optional`, while the service correctly rejected a blank password.' >> "$GITHUB_STEP_SUMMARY"

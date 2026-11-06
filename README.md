@@ -1,5 +1,7 @@
 # University Management System
 
+[![Java CI](https://github.com/aaddiibb/Software-Lab--Task/actions/workflows/java-ci.yml/badge.svg)](https://github.com/aaddiibb/Software-Lab--Task/actions/workflows/java-ci.yml)
+
 A simple REST API built with Spring Boot 3, Spring Data JPA, and Spring Security, packaged with Docker.
 
 ## Run it
@@ -103,3 +105,21 @@ src/main/java/com/university/ums
 Run the tests with `mvn test`. The suite contains 8 isolated service unit tests and 3 full
 Spring integration tests. The integration tests use an H2 test database and verify both the
 HTTP responses and the records persisted by JPA.
+
+### GitHub Actions
+
+The `Java CI` workflow runs automatically on pushes and pull requests to `main`. It shows
+the two unit-test classes and the H2 database integration tests as separate jobs. Push runs
+also show the first intentional failure demonstration.
+
+To demonstrate failed tests without keeping broken assertions in the repository:
+
+1. Open **Actions → Java CI → Run workflow**.
+2. Select `one` or `two` for **Number of intentional AccountService test failures to display**.
+3. Open the resulting `Expected failure demo` job(s). The deliberately failed Maven step is
+   marked red, while the real unit and integration jobs remain passed.
+
+The failure demonstrations modify assertions only in the temporary GitHub-hosted runner.
+Their steps use `continue-on-error`, so the expected demonstrations do not make the genuine
+CI result fail. Pull requests skip both demonstrations; push runs show one, and manual runs
+can show either one or two.
