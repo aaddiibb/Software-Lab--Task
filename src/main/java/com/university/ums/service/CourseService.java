@@ -71,7 +71,7 @@ public class CourseService {
 
     public CourseResponse enroll(Long courseId, Long studentId) {
         Course c = get(courseId);
-        c.getStudents().add(students.get(studentId));
+        students.get(studentId).getCourses().add(c);
         return CourseResponse.from(c);
     }
 
